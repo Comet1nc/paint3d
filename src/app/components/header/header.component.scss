@@ -1,0 +1,36 @@
+.container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background-color: #576072;
+  display: flex;
+  justify-content: center;
+
+  .left-side {
+    position: absolute;
+    left: 0;
+  }
+
+  .middle {
+    display: flex;
+  }
+}
+
+button {
+  background-color: #576072;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+  width: 75px;
+  height: 60px;
+  gap: 3px;
+  font-weight: 500;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+}

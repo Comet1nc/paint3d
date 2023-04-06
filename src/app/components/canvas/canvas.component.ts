@@ -15,7 +15,7 @@ export class CanvasComponent implements AfterViewInit {
     75,
     window.innerWidth / window.innerHeight,
     0.1,
-    1000
+    5000
   );
   controls!: OrbitControls;
 
@@ -40,29 +40,7 @@ export class CanvasComponent implements AfterViewInit {
 
     this.setupLighting();
 
-    // Base cube
-    this.cube = new THREE.Mesh(
-      this.geometry,
-      this.createMaterial()
-      //new THREE.MeshPhongMaterial({ color: 'red' })
-    );
-
-    // Plane
-    let planeGeometry = new THREE.PlaneGeometry(100, 100);
-    let plane = new THREE.Mesh(
-      planeGeometry,
-      new THREE.MeshPhongMaterial({
-        side: THREE.FrontSide,
-        flatShading: false,
-        color: 'white',
-      })
-    );
-    plane.position.z = 50;
-    plane.rotateX(-90);
-    this.cube.setRotationFromEuler(new THREE.Euler(0, 0, 0));
-    this.scene.add(plane);
-    this.scene.add(this.cube);
-    this.scene.background = new THREE.Color('lightgray');
+    this.setupScene();
 
     // Camera controls
     this.controls = new OrbitControls(
@@ -76,6 +54,31 @@ export class CanvasComponent implements AfterViewInit {
     this.controls.update();
 
     this.animate();
+  }
+
+  setupScene() {
+    // Base cube
+    this.cube = new THREE.Mesh(
+      this.geometry,
+      this.createMaterial()
+      //new THREE.MeshPhongMaterial({ color: 'red' })
+    );
+    let circleGeometry = new THREE.CircleGeometry(1000, 20);
+    let circleMesh = new THREE.Mesh(
+      circleGeometry,
+      new THREE.MeshPhongMaterial({
+        side: THREE.FrontSide,
+        flatShading: false,
+        color: 'white',
+      })
+    );
+    circleMesh.position.y = -5;
+    circleMesh.rotation.x = -Math.PI / 2;
+    this.cube.setRotationFromEuler(new THREE.Euler(0, 0, 0));
+
+    this.scene.add(circleMesh);
+    this.scene.add(this.cube);
+    this.scene.background = new THREE.Color('lightgray');
   }
 
   private animate() {
