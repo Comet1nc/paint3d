@@ -12,8 +12,8 @@ export class CanvasComponent implements AfterViewInit {
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
+    50,
+    (window.innerWidth * 2 - 300) / (window.innerHeight * 2 - 60),
     0.1,
     5000
   );
@@ -35,25 +35,37 @@ export class CanvasComponent implements AfterViewInit {
     // Renderer Setup
     this.renderer = new THREE.WebGLRenderer({
       canvas: this.canvasRef.nativeElement,
+      antialias: true,
     });
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setSize(window.innerWidth - 300, window.innerHeight - 60);
 
     this.setupLighting();
 
     this.setupScene();
 
-    // Camera controls
+    this.setupCamera();
+
+    this.animate();
+
+    window.addEventListener('resize', () => {
+      this.camera.aspect =
+        (window.innerWidth * 2 - 300) / (window.innerHeight * 2 - 60);
+      this.camera.updateProjectionMatrix();
+
+      this.renderer.setSize(window.innerWidth - 300, window.innerHeight - 60);
+    });
+  }
+
+  setupCamera() {
     this.controls = new OrbitControls(
       this.camera,
       this.canvasRef.nativeElement
     );
     this.controls.zoomSpeed = 2.5;
-    this.camera.position.z = 5;
+    this.camera.position.z = 7;
 
     // controls.update() must be called after any manual changes to the camera's transform
     this.controls.update();
-
-    this.animate();
   }
 
   setupScene() {

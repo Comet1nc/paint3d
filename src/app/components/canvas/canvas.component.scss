@@ -1,5 +1,6 @@
-.canvas {
-  height: 100%;
-  width: 100%;
+canvas {
+  margin-top: 60px;
+  height: calc(100% - 60px);
+  width: calc(100% - 300px);
 
 }
