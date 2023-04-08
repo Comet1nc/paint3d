@@ -1,3 +1,8 @@
 <div class="container">
-  <p>tool-bar works!</p>
+  <button
+    (click)="changeSelectMode()"
+    [ngClass]="{ selected: selectModeActive }"
+  >
+    <div class="text">Select</div>
+  </button>
 </div>

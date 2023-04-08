@@ -1,6 +1,14 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { SelectService } from './select.service';
 
 @Component({
   selector: 'app-canvas',
@@ -13,9 +21,9 @@ export class CanvasComponent implements AfterViewInit {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(
     50,
-    (window.innerWidth * 2 - 300) / (window.innerHeight * 2 - 60),
+    (window.innerWidth - 300) / (window.innerHeight - 60),
     0.1,
-    5000
+    10000
   );
   controls!: OrbitControls;
 
@@ -30,6 +38,11 @@ export class CanvasComponent implements AfterViewInit {
   mouseX = 0;
   mouseY = 0;
   zoomSpeed = 0.005;
+
+  raycaster = new THREE.Raycaster();
+  pointer = new THREE.Vector2();
+
+  constructor(private selectService: SelectService) {}
 
   ngAfterViewInit(): void {
     // Renderer Setup
@@ -54,6 +67,69 @@ export class CanvasComponent implements AfterViewInit {
 
       this.renderer.setSize(window.innerWidth - 300, window.innerHeight - 60);
     });
+
+    this.canvasRef.nativeElement.addEventListener(
+      'pointermove',
+      (event: any) => {
+        this.pointer.x = (event.clientX / (window.innerWidth - 300)) * 2 - 1;
+        this.pointer.y = -(event.clientY / (window.innerHeight - 60)) * 2 + 1;
+      }
+    );
+
+    this.canvasRef.nativeElement.addEventListener('mousedown', (event: any) => {
+      // console.log('clicked');
+      // event.preventDefault();
+      this.raycaster.setFromCamera(this.pointer, this.camera);
+      let intersects = this.raycaster.intersectObjects(this.scene.children);
+      if (intersects.length < 1) {
+        console.log('returned 1');
+        return;
+      }
+      intersects = intersects.filter(
+        (inter: THREE.Intersection<THREE.Object3D<THREE.Event>>) => {
+          return inter.object.name !== 'blocked';
+        }
+      );
+      if (intersects.length < 1) {
+        console.log('returned 1');
+        return;
+      }
+
+      for (let obj of intersects) {
+        console.log(obj.object.name);
+      }
+      // console.log(intersects);
+      if (intersects[0].object.name === 'blocked') {
+        console.log('returned 2');
+
+        return;
+      }
+
+      // intersects[0].object.rotateX(10);
+      // Draw a line from pointA in the given direction at distance 100
+      // var pointA = intersects[0].point;
+      var pointA = this.raycaster.ray.origin;
+      var direction = this.raycaster.ray.direction;
+
+      // direction.normalize();
+      // direction.normalize();
+
+      var distance = intersects[0].distance; // at what distance to determine pointB
+
+      var pointB = new THREE.Vector3();
+      if (direction === undefined) return;
+      pointB.addVectors(pointA, direction.multiplyScalar(distance));
+
+      var geometry = new THREE.BufferGeometry().setFromPoints([pointA, pointB]);
+      // geometry.vertices.push(  );
+      // geometry.vertices.push( pointB );
+      var material = new THREE.LineBasicMaterial({ color: 0xff0000 });
+      var line = new THREE.Line(geometry, material);
+      line.name = 'blocked';
+      // this.scene.add(line);
+
+      console.log('new line');
+    });
   }
 
   setupCamera() {
@@ -75,6 +151,7 @@ export class CanvasComponent implements AfterViewInit {
       this.createMaterial()
       //new THREE.MeshPhongMaterial({ color: 'red' })
     );
+    this.cube.name = 'normal';
     let circleGeometry = new THREE.CircleGeometry(1000, 20);
     let circleMesh = new THREE.Mesh(
       circleGeometry,
@@ -86,6 +163,7 @@ export class CanvasComponent implements AfterViewInit {
     );
     circleMesh.position.y = -5;
     circleMesh.rotation.x = -Math.PI / 2;
+    circleMesh.name = 'blocked';
     this.cube.setRotationFromEuler(new THREE.Euler(0, 0, 0));
 
     this.scene.add(circleMesh);
@@ -95,6 +173,7 @@ export class CanvasComponent implements AfterViewInit {
 
   private animate() {
     requestAnimationFrame(() => this.animate());
+
     // this.cube.rotation.y += 0.02;
     this.renderer.render(this.scene, this.camera);
   }

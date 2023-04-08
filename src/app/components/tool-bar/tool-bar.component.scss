@@ -6,6 +6,20 @@
   height: 60px;
   background-color: whitesmoke;
   display: flex;
-  justify-content: center;
 
+}
+
+button {
+  width: 100px;
+  height: 100%;
+  background-color: whitesmoke;
+
+  &:hover {
+    filter: brightness(0.9);
+  }
+
+  &.selected {
+    filter: brightness(0.9);
+
+  }
 }
