@@ -21,7 +21,7 @@ export class CanvasComponent implements AfterViewInit {
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(
     50,
-    (window.innerWidth - 300) / (window.innerHeight - 60),
+    (window.innerWidth - 300) / (window.innerHeight - 120),
     0.1,
     10000
   );
@@ -50,7 +50,7 @@ export class CanvasComponent implements AfterViewInit {
       canvas: this.canvasRef.nativeElement,
       antialias: true,
     });
-    this.renderer.setSize(window.innerWidth - 300, window.innerHeight - 60);
+    this.renderer.setSize(window.innerWidth - 300, window.innerHeight - 120);
 
     this.setupLighting();
 
@@ -62,23 +62,31 @@ export class CanvasComponent implements AfterViewInit {
 
     window.addEventListener('resize', () => {
       this.camera.aspect =
-        (window.innerWidth * 2 - 300) / (window.innerHeight * 2 - 60);
+        (window.innerWidth - 300) / (window.innerHeight - 120);
       this.camera.updateProjectionMatrix();
 
-      this.renderer.setSize(window.innerWidth - 300, window.innerHeight - 60);
+      this.renderer.setSize(window.innerWidth - 300, window.innerHeight - 120);
     });
 
     this.canvasRef.nativeElement.addEventListener(
       'pointermove',
       (event: any) => {
-        this.pointer.x = (event.clientX / (window.innerWidth - 300)) * 2 - 1;
-        this.pointer.y = -(event.clientY / (window.innerHeight - 60)) * 2 + 1;
+        this.pointer.x =
+          ((event.clientX - this.canvasRef.nativeElement.offsetLeft) /
+            this.canvasRef.nativeElement.offsetWidth) *
+            2 -
+          1;
+        this.pointer.y =
+          -(
+            (event.clientY - this.canvasRef.nativeElement.offsetTop) /
+            this.canvasRef.nativeElement.offsetHeight
+          ) *
+            2 +
+          1;
       }
     );
 
     this.canvasRef.nativeElement.addEventListener('mousedown', (event: any) => {
-      // console.log('clicked');
-      // event.preventDefault();
       this.raycaster.setFromCamera(this.pointer, this.camera);
       let intersects = this.raycaster.intersectObjects(this.scene.children);
       if (intersects.length < 1) {
@@ -90,45 +98,16 @@ export class CanvasComponent implements AfterViewInit {
           return inter.object.name !== 'blocked';
         }
       );
-      if (intersects.length < 1) {
-        console.log('returned 1');
-        return;
-      }
+      if (intersects.length < 1) return;
 
-      for (let obj of intersects) {
-        console.log(obj.object.name);
-      }
-      // console.log(intersects);
-      if (intersects[0].object.name === 'blocked') {
-        console.log('returned 2');
+      // for (let obj of intersects) {
+      //   console.log(obj.object.name);
+      // }
+      if (intersects[0].object.name === 'blocked') return;
 
-        return;
-      }
+      // this.drawRayHelper(intersects);
 
-      // intersects[0].object.rotateX(10);
-      // Draw a line from pointA in the given direction at distance 100
-      // var pointA = intersects[0].point;
-      var pointA = this.raycaster.ray.origin;
-      var direction = this.raycaster.ray.direction;
-
-      // direction.normalize();
-      // direction.normalize();
-
-      var distance = intersects[0].distance; // at what distance to determine pointB
-
-      var pointB = new THREE.Vector3();
-      if (direction === undefined) return;
-      pointB.addVectors(pointA, direction.multiplyScalar(distance));
-
-      var geometry = new THREE.BufferGeometry().setFromPoints([pointA, pointB]);
-      // geometry.vertices.push(  );
-      // geometry.vertices.push( pointB );
-      var material = new THREE.LineBasicMaterial({ color: 0xff0000 });
-      var line = new THREE.Line(geometry, material);
-      line.name = 'blocked';
-      // this.scene.add(line);
-
-      console.log('new line');
+      console.log('OK');
     });
   }
 
@@ -199,5 +178,20 @@ export class CanvasComponent implements AfterViewInit {
     pointLight.position.y = 3;
     pointLight.position.z = 4;
     this.scene.add(ambientLight, pointLight);
+  }
+
+  drawRayHelper(intersects: any) {
+    var pointA = this.raycaster.ray.origin;
+    var direction = this.raycaster.ray.direction;
+    var distance = intersects[0].distance; // at what distance to determine pointB
+    var pointB = new THREE.Vector3();
+    if (direction === undefined) return;
+
+    pointB.addVectors(pointA, direction.multiplyScalar(distance));
+    var geometry = new THREE.BufferGeometry().setFromPoints([pointA, pointB]);
+    var material = new THREE.LineBasicMaterial({ color: 0xff0000 });
+    var line = new THREE.Line(geometry, material);
+    line.name = 'blocked';
+    this.scene.add(line);
   }
 }
