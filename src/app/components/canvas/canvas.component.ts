@@ -2,20 +2,20 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
-  Inject,
   OnInit,
   ViewChild,
 } from '@angular/core';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { SelectService } from './select.service';
+import { CanvasService } from './canvas.service';
 
 @Component({
   selector: 'app-canvas',
   templateUrl: './canvas.component.html',
   styleUrls: ['./canvas.component.scss'],
 })
-export class CanvasComponent implements AfterViewInit {
+export class CanvasComponent implements OnInit, AfterViewInit {
   @ViewChild('canvas') private canvasRef!: ElementRef;
 
   scene = new THREE.Scene();
@@ -42,7 +42,14 @@ export class CanvasComponent implements AfterViewInit {
   raycaster = new THREE.Raycaster();
   pointer = new THREE.Vector2();
 
-  constructor(private selectService: SelectService) {}
+  constructor(
+    private selectService: SelectService,
+    private canvasService: CanvasService
+  ) {}
+
+  ngOnInit(): void {
+    this.canvasService.scene = this.scene;
+  }
 
   ngAfterViewInit(): void {
     // Renderer Setup
@@ -90,7 +97,7 @@ export class CanvasComponent implements AfterViewInit {
       this.raycaster.setFromCamera(this.pointer, this.camera);
       let intersects = this.raycaster.intersectObjects(this.scene.children);
       if (intersects.length < 1) {
-        console.log('returned 1');
+        console.log('not found open mesh');
         return;
       }
       intersects = intersects.filter(
@@ -106,6 +113,10 @@ export class CanvasComponent implements AfterViewInit {
       if (intersects[0].object.name === 'blocked') return;
 
       // this.drawRayHelper(intersects);
+
+      if (this.selectService.selectModeIsActive) {
+        this.selectService.onItemSelected.next(intersects[0].object);
+      }
 
       console.log('OK');
     });
@@ -123,6 +134,26 @@ export class CanvasComponent implements AfterViewInit {
     this.controls.update();
   }
 
+  createCube() {
+    let cube = new THREE.Mesh(
+      this.geometry,
+      this.createMaterial()
+      //new THREE.MeshPhongMaterial({ color: 'red' })
+    );
+    cube.name = 'normal';
+    let circleGeometry = new THREE.CircleGeometry(1000, 20);
+    let circleMesh = new THREE.Mesh(
+      circleGeometry,
+      new THREE.MeshPhongMaterial({
+        side: THREE.FrontSide,
+        flatShading: false,
+        color: 'white',
+      })
+    );
+
+    return cube;
+  }
+
   setupScene() {
     // Base cube
     this.cube = new THREE.Mesh(
@@ -138,8 +169,17 @@ export class CanvasComponent implements AfterViewInit {
         side: THREE.FrontSide,
         flatShading: false,
         color: 'white',
+        polygonOffset: true,
+        polygonOffsetFactor: 1, // positive value pushes polygon further away
+        polygonOffsetUnits: 1,
       })
     );
+
+    // TEST MESHES
+    let testCube1 = this.createCube();
+    this.scene.add(testCube1);
+    testCube1.translateX(2);
+    // ============================
     circleMesh.position.y = -5;
     circleMesh.rotation.x = -Math.PI / 2;
     circleMesh.name = 'blocked';

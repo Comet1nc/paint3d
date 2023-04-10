@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { SelectService } from '../canvas/select.service';
 
 @Component({
@@ -6,10 +6,14 @@ import { SelectService } from '../canvas/select.service';
   templateUrl: './tool-bar.component.html',
   styleUrls: ['./tool-bar.component.scss'],
 })
-export class ToolBarComponent {
+export class ToolBarComponent implements OnInit {
   constructor(private selectService: SelectService) {}
 
-  selectModeActive = false;
+  ngOnInit(): void {
+    this.selectModeActive = this.selectService.selectModeIsActive;
+  }
+
+  selectModeActive = true;
 
   changeSelectMode() {
     if (!this.selectService.selectModeIsActive) {
