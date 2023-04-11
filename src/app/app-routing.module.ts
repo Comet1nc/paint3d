@@ -3,8 +3,9 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: '**',
+    path: '',
     redirectTo: 'three-d-shapes',
+    pathMatch: 'full',
   },
   {
     path: 'three-d-shapes',
@@ -12,6 +13,13 @@ const routes: Routes = [
       import(
         './components/right-menu/three-d-shapes/three-d-shapes.module'
       ).then((m) => m.ThreeDShapesModule),
+  },
+  {
+    path: 'selection',
+    loadChildren: () =>
+      import('./components/right-menu/selection/selection.module').then(
+        (m) => m.SelectionModule
+      ),
   },
 ];
 

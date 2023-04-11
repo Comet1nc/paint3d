@@ -9,6 +9,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { SelectService } from './select.service';
 import { CanvasService } from './canvas.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-canvas',

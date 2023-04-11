@@ -11,9 +11,12 @@ export class ToolBarComponent implements OnInit {
 
   ngOnInit(): void {
     this.selectModeActive = this.selectService.selectModeIsActive;
+    this.selectService.onSelectModeExit.subscribe(
+      () => (this.selectModeActive = false)
+    );
   }
 
-  selectModeActive = true;
+  selectModeActive!: boolean;
 
   changeSelectMode() {
     if (!this.selectService.selectModeIsActive) {
