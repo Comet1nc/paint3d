@@ -11,12 +11,12 @@ export class SelectService {
   onSelectModeExit = new Subject<void>();
 
   onItemSelected = new Subject<THREE.Object3D>();
-  selectedItem!: THREE.Object3D;
+  selectedObject!: any;
   currentSelectTool!: THREE.LineSegments;
 
   constructor(private canvasService: CanvasService, private router: Router) {
     this.onItemSelected.subscribe((item: THREE.Object3D) => {
-      this.selectedItem = item;
+      this.selectedObject = item;
       if (this.currentSelectTool !== undefined) {
         this.canvasService.scene.remove(this.currentSelectTool);
       }
@@ -26,7 +26,7 @@ export class SelectService {
   }
 
   createSelectTool() {
-    let boundingBox = new THREE.Box3().setFromObject(this.selectedItem);
+    let boundingBox = new THREE.Box3().setFromObject(this.selectedObject);
     let size = boundingBox.getSize(new THREE.Vector3());
 
     const widthSegments = 2;
@@ -53,9 +53,9 @@ export class SelectService {
     this.canvasService.scene.add(this.currentSelectTool);
 
     this.currentSelectTool.position.set(
-      this.selectedItem.position.x,
-      this.selectedItem.position.y,
-      this.selectedItem.position.z
+      this.selectedObject.position.x,
+      this.selectedObject.position.y,
+      this.selectedObject.position.z
     );
     // ==================================
     // some  btn
@@ -91,6 +91,8 @@ export class SelectService {
     this.onSelectModeExit.next();
     this.selectModeIsActive = false;
     this.canvasService.scene.remove(this.currentSelectTool);
+    this.router.navigate(['']);
+
     // this.selectedItem = new THREE.Object3D();
   }
 
@@ -98,7 +100,11 @@ export class SelectService {
 
   deleteObject() {
     this.canvasService.scene.remove(this.currentSelectTool);
-    this.canvasService.scene.remove(this.selectedItem);
+    this.canvasService.scene.remove(this.selectedObject);
     this.router.navigate(['']);
+  }
+
+  setNewColor(color: string) {
+    this.selectedObject?.material.color.set(color);
   }
 }

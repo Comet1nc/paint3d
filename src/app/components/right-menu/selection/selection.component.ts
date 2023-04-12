@@ -21,4 +21,8 @@ export class SelectionComponent implements OnDestroy, OnInit {
   deleteObject() {
     this.selectService.deleteObject();
   }
+
+  applyColor(el: any) {
+    this.selectService.setNewColor(el.value);
+  }
 }

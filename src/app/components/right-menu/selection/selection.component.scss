@@ -4,15 +4,55 @@
   padding: 20px;
   gap: 10px;
 
+  .color-edit-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .input-wrapper {
+      display: flex;
+      margin-top: 10px;
+      align-items: center;
+
+      input {
+        width: 50%;
+        border: 1px solid gray;
+        background-color: #F5F5F5;
+        height: 30px;
+
+
+        &:hover {
+          filter: brightness(1.1);
+          border: 1px solid #1d5dff;
+          color: #1d5dff;
+        }
+      }
+
+      button {
+        padding: 10px;
+        border: 1px solid gray;
+        background-color: #F5F5F5;
+        min-width: 50px;
+        max-width: 50%;
+        margin-left: 10px;
+
+        &:hover {
+          filter: brightness(1.1);
+          border: 1px solid #1d5dff;
+          color: #1d5dff;
+        }
+      }
+    }
+
+
+  }
+
   .action-wrapper {
     display: flex;
     flex-direction: column;
     gap: 10px;
 
-    h1 {
-      font-size: 18px;
 
-    }
 
     .buttons {
       display: flex;
@@ -29,6 +69,12 @@
           color: #1d5dff;
         }
       }
+
     }
   }
+}
+
+h1 {
+  font-size: 18px;
+
 }
