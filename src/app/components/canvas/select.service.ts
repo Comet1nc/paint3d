@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import * as THREE from 'three';
 import { CanvasService } from './canvas.service';
@@ -13,6 +13,7 @@ export class SelectService {
   onItemSelected = new Subject<THREE.Object3D>();
   selectedObject!: any;
   currentSelectTool!: THREE.LineSegments;
+  lastCameraPos!: THREE.Vector3;
 
   constructor(private canvasService: CanvasService, private router: Router) {
     this.onItemSelected.subscribe((item: THREE.Object3D) => {
@@ -23,6 +24,32 @@ export class SelectService {
       this.createSelectTool();
       this.router.navigate(['selection']);
     });
+  }
+
+  moveSelectTool() {
+    if (!this.selectModeIsActive || this.currentSelectTool === undefined)
+      return;
+
+    this.currentSelectTool.lookAt(this.canvasService.camera.position);
+  }
+
+  startCameraMoveInterval() {
+    // this.lastCameraPos = this.canvasService.camera.position;
+    // this.currentSelectTool?.lookAt(this.canvasService.camera.position);
+    let interval = setInterval(() => {
+      if (!this.selectModeIsActive) return;
+      // console.log(this.canvasService.camera.position);
+      if (this.canvasService.camera.rotation.x > 90 * Math.PI) {
+        this.currentSelectTool.lookAt(
+          new THREE.Vector3(this.canvasService.camera.position.x)
+        );
+      }
+      // this.lastCameraPos = this.canvasService.camera.position;
+      // if (this.canvasService.camera.position !== this.lastCameraPos) {
+      //   // console.log('ww');
+
+      // }
+    }, 100);
   }
 
   createSelectTool() {
@@ -42,7 +69,7 @@ export class SelectService {
     this.currentSelectTool = new THREE.LineSegments(
       geometry,
       new THREE.LineBasicMaterial({
-        color: 0xffffff,
+        color: '#787878',
         polygonOffset: true,
         polygonOffsetFactor: 2, // positive value pushes polygon further away
         polygonOffsetUnits: 2,
@@ -57,6 +84,12 @@ export class SelectService {
       this.selectedObject.position.y,
       this.selectedObject.position.z
     );
+
+    // this.canvasService.camera.position.
+    // this.canvasService.camera.addEventListener('onmove', () => {
+    //   this.currentSelectTool.lookAt(this.canvasService.camera.position);
+    // });
+
     // ==================================
     // some  btn
     // var loader = new THREE.TextureLoader();

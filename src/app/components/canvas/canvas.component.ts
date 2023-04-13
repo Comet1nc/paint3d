@@ -121,6 +121,8 @@ export class CanvasComponent implements OnInit, AfterViewInit {
 
       console.log('OK');
     });
+
+    // this.selectService.startCameraMoveInterval();
   }
 
   setupCamera() {
@@ -130,6 +132,8 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     );
     this.controls.zoomSpeed = 2.5;
     this.camera.position.z = 7;
+
+    this.canvasService.camera = this.camera;
 
     // controls.update() must be called after any manual changes to the camera's transform
     this.controls.update();
@@ -193,7 +197,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
 
   private animate() {
     requestAnimationFrame(() => this.animate());
-
+    this.selectService.moveSelectTool();
     // this.cube.rotation.y += 0.02;
     this.renderer.render(this.scene, this.camera);
   }
@@ -213,7 +217,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
   }
 
   setupLighting() {
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
     const pointLight = new THREE.PointLight(0xffffff, 0.5);
     pointLight.position.x = 2;
     pointLight.position.y = 3;

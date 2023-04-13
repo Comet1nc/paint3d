@@ -3,5 +3,6 @@ import * as THREE from 'three';
 
 @Injectable({ providedIn: 'root' })
 export class CanvasService {
-  scene = new THREE.Scene();
+  scene!: THREE.Scene;
+  camera!: THREE.Camera;
 }
