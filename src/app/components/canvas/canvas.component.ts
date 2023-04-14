@@ -10,6 +10,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import { SelectService } from './select.service';
 import { CanvasService } from './canvas.service';
 import { Router } from '@angular/router';
+import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 
 @Component({
   selector: 'app-canvas',
@@ -26,7 +27,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     0.1,
     10000
   );
-  controls!: OrbitControls;
+  orbitControls!: OrbitControls;
 
   renderer!: THREE.WebGLRenderer;
 
@@ -34,15 +35,13 @@ export class CanvasComponent implements OnInit, AfterViewInit {
   material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
   cube!: THREE.Mesh;
 
-  mouseDown = false;
-  rightMouseDown = false;
-  mouseX = 0;
-  mouseY = 0;
-  zoomSpeed = 0.005;
-
   raycaster = new THREE.Raycaster();
   pointer = new THREE.Vector2();
 
+  dragControls!: DragControls;
+
+  objectsOnScene: THREE.Object3D[] = [];
+  // dragStartEvent: Event;
   constructor(
     private selectService: SelectService,
     private canvasService: CanvasService
@@ -113,30 +112,66 @@ export class CanvasComponent implements OnInit, AfterViewInit {
       // }
       if (intersects[0].object.name === 'blocked') return;
 
-      // this.drawRayHelper(intersects);
+      if (intersects[0].object.name === 'select') {
+        console.log('select founded');
+        return;
+      }
 
+      // this.drawRayHelper(intersects);
+      if (
+        this.selectService.selectModeIsActive &&
+        this.selectService.selectedObject === intersects[0].object
+      ) {
+        console.log('clicked on selected item');
+
+        console.log(this.dragControls.getObjects());
+        // move object
+      }
       if (this.selectService.selectModeIsActive) {
         this.selectService.onItemSelected.next(intersects[0].object);
+        if (this.dragControls !== undefined) {
+          this.dragControls.removeEventListener;
+        }
       }
 
       console.log('OK');
     });
 
+    this.dragControls = new DragControls(
+      this.objectsOnScene,
+      this.camera,
+      this.renderer.domElement
+    );
+
+    this.dragControls.addEventListener('dragstart', (event: any) => {
+      this.orbitControls.enabled = false;
+      event.object.material.emissive.set(0xaaaaaa);
+    });
+
+    this.dragControls.addEventListener('dragend', (event: any) => {
+      this.orbitControls.enabled = true;
+      event.object.material.emissive.set(0x000000);
+    });
+
+    // this.canvasRef.nativeElement.addEventListener('drag', (event: any) => {
+    //   console.log('drag enter');
+    // });
+
     // this.selectService.startCameraMoveInterval();
   }
 
   setupCamera() {
-    this.controls = new OrbitControls(
+    this.orbitControls = new OrbitControls(
       this.camera,
       this.canvasRef.nativeElement
     );
-    this.controls.zoomSpeed = 2.5;
+    this.orbitControls.zoomSpeed = 2.5;
     this.camera.position.z = 7;
 
     this.canvasService.camera = this.camera;
 
     // controls.update() must be called after any manual changes to the camera's transform
-    this.controls.update();
+    this.orbitControls.update();
   }
 
   createCube() {
@@ -189,6 +224,9 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     circleMesh.rotation.x = -Math.PI / 2;
     circleMesh.name = 'blocked';
     this.cube.setRotationFromEuler(new THREE.Euler(0, 0, 0));
+
+    this.objectsOnScene.push(testCube1);
+    this.objectsOnScene.push(this.cube);
 
     this.scene.add(circleMesh);
     this.scene.add(this.cube);

@@ -75,7 +75,7 @@ export class SelectService {
         polygonOffsetUnits: 2,
       })
     );
-    this.currentSelectTool.name = 'blocked';
+    this.currentSelectTool.name = 'select';
 
     this.canvasService.scene.add(this.currentSelectTool);
 
