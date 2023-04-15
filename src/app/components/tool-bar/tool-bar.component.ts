@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { SelectService } from '../canvas/select.service';
+import { CanvasService } from '../canvas/canvas.service';
 
 @Component({
   selector: 'app-tool-bar',
@@ -7,7 +8,10 @@ import { SelectService } from '../canvas/select.service';
   styleUrls: ['./tool-bar.component.scss'],
 })
 export class ToolBarComponent implements OnInit {
-  constructor(private selectService: SelectService) {}
+  constructor(
+    private selectService: SelectService,
+    private canvasService: CanvasService
+  ) {}
 
   ngOnInit(): void {
     this.selectModeActive = this.selectService.selectModeIsActive;
@@ -17,8 +21,19 @@ export class ToolBarComponent implements OnInit {
   }
 
   selectModeActive!: boolean;
+  moveModeActive: boolean = true;
 
-  changeSelectMode() {
+  toggleMoveMode() {
+    if (this.moveModeActive) {
+      this.moveModeActive = false;
+      this.canvasService.dragControls.enabled = this.moveModeActive;
+    } else {
+      this.moveModeActive = true;
+      this.canvasService.dragControls.enabled = this.moveModeActive;
+    }
+  }
+
+  toggleSelectMode() {
     if (!this.selectService.selectModeIsActive) {
       this.selectService.enterSelectMode();
       this.selectModeActive = true;

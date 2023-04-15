@@ -1,8 +1,11 @@
 <div class="container">
   <button
-    (click)="changeSelectMode()"
+    (click)="toggleSelectMode()"
     [ngClass]="{ selected: selectModeActive }"
   >
-    <div class="text">Select</div>
+    Select
+  </button>
+  <button (click)="toggleMoveMode()" [ngClass]="{ selected: moveModeActive }">
+    Move object
   </button>
 </div>

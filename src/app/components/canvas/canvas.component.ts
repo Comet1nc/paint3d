@@ -137,11 +137,23 @@ export class CanvasComponent implements OnInit, AfterViewInit {
       console.log('OK');
     });
 
+    this.setupDragControls();
+
+    // this.canvasRef.nativeElement.addEventListener('drag', (event: any) => {
+    //   console.log('drag enter');
+    // });
+
+    // this.selectService.startCameraMoveInterval();
+  }
+
+  setupDragControls() {
     this.dragControls = new DragControls(
       this.objectsOnScene,
       this.camera,
       this.renderer.domElement
     );
+
+    this.canvasService.dragControls = this.dragControls;
 
     this.dragControls.addEventListener('dragstart', (event: any) => {
       this.orbitControls.enabled = false;
@@ -152,12 +164,6 @@ export class CanvasComponent implements OnInit, AfterViewInit {
       this.orbitControls.enabled = true;
       event.object.material.emissive.set(0x000000);
     });
-
-    // this.canvasRef.nativeElement.addEventListener('drag', (event: any) => {
-    //   console.log('drag enter');
-    // });
-
-    // this.selectService.startCameraMoveInterval();
   }
 
   setupCamera() {
