@@ -241,7 +241,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
 
   private animate() {
     requestAnimationFrame(() => this.animate());
-    this.selectService.moveSelectTool();
+    this.selectService.animateSelectTool();
     // this.cube.rotation.y += 0.02;
     this.renderer.render(this.scene, this.camera);
   }

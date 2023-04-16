@@ -18,48 +18,77 @@ export class SelectService {
   constructor(private canvasService: CanvasService, private router: Router) {
     this.onItemSelected.subscribe((item: THREE.Object3D) => {
       this.selectedObject = item;
-      if (this.currentSelectTool !== undefined) {
-        this.canvasService.scene.remove(this.currentSelectTool);
-      }
+      this.deleteSelectTool();
       this.createSelectTool();
       this.router.navigate(['selection']);
     });
   }
 
-  moveSelectTool() {
+  deleteSelectTool() {
+    if (this.currentSelectTool !== undefined) {
+      this.canvasService.scene.remove(this.currentSelectTool);
+    }
+  }
+
+  animateSelectTool() {
     if (!this.selectModeIsActive || this.currentSelectTool === undefined)
       return;
 
     this.currentSelectTool.lookAt(this.canvasService.camera.position);
+    this.currentSelectTool.position.set(
+      this.selectedObject.position.x,
+      this.selectedObject.position.y,
+      this.selectedObject.position.z
+    );
+    let scaleX: number;
+
+    if (this.selectedObject.scale.z > this.selectedObject.scale.x) {
+      scaleX = this.selectedObject.scale.z;
+    } else {
+      scaleX = this.selectedObject.scale.x;
+    }
+
+    // this.currentSelectTool.scale.set(
+    //   scaleX,
+    //   this.selectedObject.scale.y,
+    //   scaleX
+    // );
   }
 
-  startCameraMoveInterval() {
-    // this.lastCameraPos = this.canvasService.camera.position;
-    // this.currentSelectTool?.lookAt(this.canvasService.camera.position);
-    let interval = setInterval(() => {
-      if (!this.selectModeIsActive) return;
-      // console.log(this.canvasService.camera.position);
-      if (this.canvasService.camera.rotation.x > 90 * Math.PI) {
-        this.currentSelectTool.lookAt(
-          new THREE.Vector3(this.canvasService.camera.position.x)
-        );
-      }
-      // this.lastCameraPos = this.canvasService.camera.position;
-      // if (this.canvasService.camera.position !== this.lastCameraPos) {
-      //   // console.log('ww');
+  // startCameraMoveInterval() {
+  //   // this.lastCameraPos = this.canvasService.camera.position;
+  //   // this.currentSelectTool?.lookAt(this.canvasService.camera.position);
+  //   let interval = setInterval(() => {
+  //     if (!this.selectModeIsActive) return;
+  //     // console.log(this.canvasService.camera.position);
+  //     if (this.canvasService.camera.rotation.x > 90 * Math.PI) {
+  //       this.currentSelectTool.lookAt(
+  //         new THREE.Vector3(this.canvasService.camera.position.x)
+  //       );
+  //     }
+  //     // this.lastCameraPos = this.canvasService.camera.position;
+  //     // if (this.canvasService.camera.position !== this.lastCameraPos) {
+  //     //   // console.log('ww');
 
-      // }
-    }, 100);
-  }
+  //     // }
+  //   }, 100);
+  // }
 
   createSelectTool() {
     let boundingBox = new THREE.Box3().setFromObject(this.selectedObject);
     let size = boundingBox.getSize(new THREE.Vector3());
 
+    let sizeX: number;
+
+    if (size.z > size.x) {
+      sizeX = size.z;
+    } else {
+      sizeX = size.x;
+    }
     const widthSegments = 2;
     const heightSegments = 2;
     let planeGeometry = new THREE.PlaneGeometry(
-      size.x * 1.5,
+      sizeX * 1.5,
       size.y * 1.5,
       widthSegments,
       heightSegments

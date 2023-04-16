@@ -72,6 +72,26 @@
 
     }
   }
+
+  .scale-wrapper {
+    .inputs {
+      display: flex;
+
+      .scale {
+        display: flex;
+
+        input {
+          max-width: 50px;
+          border: 1px solid gray;
+          background-color: #F5F5F5;
+        }
+      }
+
+
+    }
+
+
+  }
 }
 
 h1 {
