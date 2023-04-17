@@ -21,7 +21,7 @@ export class ToolBarComponent implements OnInit {
   }
 
   selectModeActive!: boolean;
-  moveModeActive: boolean = true;
+  moveModeActive: boolean = false;
 
   toggleMoveMode() {
     if (this.moveModeActive) {

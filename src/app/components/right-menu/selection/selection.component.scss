@@ -86,11 +86,23 @@
           background-color: #F5F5F5;
         }
       }
-
-
     }
+  }
 
+  .position-wrapper {
+    .inputs {
+      display: flex;
 
+      .position {
+        display: flex;
+
+        input {
+          max-width: 50px;
+          border: 1px solid gray;
+          background-color: #F5F5F5;
+        }
+      }
+    }
   }
 }
 

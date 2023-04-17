@@ -164,6 +164,8 @@ export class CanvasComponent implements OnInit, AfterViewInit {
       this.orbitControls.enabled = true;
       event.object.material.emissive.set(0x000000);
     });
+
+    this.dragControls.enabled = false;
   }
 
   setupCamera() {
