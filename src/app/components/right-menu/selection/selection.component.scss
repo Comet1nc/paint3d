@@ -73,11 +73,17 @@
     }
   }
 
-  .scale-wrapper {
+  .scale-wrapper,
+  .position-wrapper,
+  .rotation-wrapper {
+
     .inputs {
       display: flex;
+      margin-top: 10px;
 
-      .scale {
+      .scale,
+      .position,
+      .rotation {
         display: flex;
 
         input {
@@ -89,21 +95,6 @@
     }
   }
 
-  .position-wrapper {
-    .inputs {
-      display: flex;
-
-      .position {
-        display: flex;
-
-        input {
-          max-width: 50px;
-          border: 1px solid gray;
-          background-color: #F5F5F5;
-        }
-      }
-    }
-  }
 }
 
 h1 {

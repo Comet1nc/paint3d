@@ -1,5 +1,5 @@
 import { AfterContentInit, AfterViewInit, Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import * as THREE from 'three';
 import { CanvasService } from './canvas.service';
 import { Router } from '@angular/router';
@@ -10,13 +10,15 @@ export class SelectService {
   onSelectModeEnter = new Subject<void>();
   onSelectModeExit = new Subject<void>();
 
-  onItemSelected = new Subject<THREE.Object3D>();
+  onItemSelected = new BehaviorSubject<THREE.Object3D | undefined>(undefined);
   selectedObject!: any;
   currentSelectTool!: THREE.LineSegments;
   lastCameraPos!: THREE.Vector3;
 
   constructor(private canvasService: CanvasService, private router: Router) {
-    this.onItemSelected.subscribe((item: THREE.Object3D) => {
+    this.onItemSelected.subscribe((item: THREE.Object3D | undefined) => {
+      if (item === undefined) return;
+
       this.selectedObject = item;
       this.deleteSelectTool();
       this.createSelectTool();

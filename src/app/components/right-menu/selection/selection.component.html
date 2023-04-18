@@ -1,17 +1,78 @@
 <div class="container">
-  <div class="color-edit-wrapper">
-    <h1>Edit Color</h1>
-    <div class="input-wrapper">
-      <input type="color" #colorInput />
-      <button (click)="applyColor(colorInput)">Apply color</button>
+  <div class="position-wrapper">
+    <h1>Position</h1>
+    <div class="inputs">
+      <div class="position">
+        <div class="name">&nbsp;X:&nbsp;</div>
+        <input
+          matInput
+          type="number"
+          placeholder="0"
+          step="0.1"
+          [(ngModel)]="positionX"
+          (input)="applyPosition()"
+        />
+      </div>
+      <div class="position">
+        <div class="name">&nbsp;Y:&nbsp;</div>
+        <input
+          matInput
+          type="number"
+          placeholder="0"
+          step="0.1"
+          [(ngModel)]="positionY"
+          (input)="applyPosition()"
+        />
+      </div>
+      <div class="position">
+        <div class="name">&nbsp;Z:&nbsp;</div>
+        <input
+          matInput
+          type="number"
+          placeholder="0"
+          step="0.1"
+          [(ngModel)]="positionZ"
+          (input)="applyPosition()"
+        />
+      </div>
     </div>
   </div>
-  <div class="action-wrapper">
-    <h1>Edit</h1>
-    <div class="buttons">
-      <button (click)="deleteObject()">delete</button>
-      <button>cut</button>
-      <button>copy</button>
+  <div class="rotation-wrapper">
+    <h1>Rotation</h1>
+    <div class="inputs">
+      <div class="rotation">
+        <div class="name">&nbsp;X:&nbsp;</div>
+        <input
+          matInput
+          type="number"
+          placeholder="0"
+          step="1"
+          [(ngModel)]="rotationX"
+          (input)="applyRotation()"
+        />
+      </div>
+      <div class="rotation">
+        <div class="name">&nbsp;Y:&nbsp;</div>
+        <input
+          matInput
+          type="number"
+          placeholder="0"
+          step="1"
+          [(ngModel)]="rotationY"
+          (input)="applyRotation()"
+        />
+      </div>
+      <div class="rotation">
+        <div class="name">&nbsp;Z:&nbsp;</div>
+        <input
+          matInput
+          type="number"
+          placeholder="0"
+          step="1"
+          [(ngModel)]="rotationZ"
+          (input)="applyRotation()"
+        />
+      </div>
     </div>
   </div>
   <div class="scale-wrapper">
@@ -52,44 +113,22 @@
       </div>
     </div>
   </div>
-  <div class="position-wrapper">
-    <h1>Position</h1>
-    <div class="inputs">
-      <div class="position">
-        <div class="name">&nbsp;X:&nbsp;</div>
-        <input
-          matInput
-          type="number"
-          placeholder="0"
-          step="0.1"
-          [(ngModel)]="positionX"
-          (input)="applyPosition()"
-        />
-      </div>
-      <div class="position">
-        <div class="name">&nbsp;Y:&nbsp;</div>
-        <input
-          matInput
-          type="number"
-          placeholder="0"
-          step="0.1"
-          [(ngModel)]="positionY"
-          (input)="applyPosition()"
-        />
-      </div>
-      <div class="position">
-        <div class="name">&nbsp;Z:&nbsp;</div>
-        <input
-          matInput
-          type="number"
-          placeholder="0"
-          step="0.1"
-          [(ngModel)]="positionZ"
-          (input)="applyPosition()"
-        />
-      </div>
+  <div class="color-edit-wrapper">
+    <h1>Edit Color</h1>
+    <div class="input-wrapper">
+      <input type="color" #colorInput />
+      <button (click)="applyColor(colorInput)">Apply color</button>
     </div>
   </div>
+  <div class="action-wrapper">
+    <h1>Edit</h1>
+    <div class="buttons">
+      <button (click)="deleteObject()">delete</button>
+      <button>cut</button>
+      <button>copy</button>
+    </div>
+  </div>
+
   <!-- <div class="action-wrapper">
     <h1>Edit</h1>
     <div class="buttons">
