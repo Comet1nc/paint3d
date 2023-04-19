@@ -105,6 +105,11 @@ export class CanvasComponent implements OnInit, AfterViewInit {
           return inter.object.name !== 'blocked';
         }
       );
+      intersects = intersects.filter(
+        (inter: THREE.Intersection<THREE.Object3D<THREE.Event>>) => {
+          return inter.object.name !== 'select';
+        }
+      );
       if (intersects.length < 1) return;
 
       // for (let obj of intersects) {
@@ -112,10 +117,10 @@ export class CanvasComponent implements OnInit, AfterViewInit {
       // }
       if (intersects[0].object.name === 'blocked') return;
 
-      if (intersects[0].object.name === 'select') {
-        console.log('select founded');
-        return;
-      }
+      // if (intersects[0].object.name === 'select') {
+      //   console.log('select founded');
+      //   return;
+      // }
 
       // this.drawRayHelper(intersects);
       if (
@@ -138,12 +143,6 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     });
 
     this.setupDragControls();
-
-    // this.canvasRef.nativeElement.addEventListener('drag', (event: any) => {
-    //   console.log('drag enter');
-    // });
-
-    // this.selectService.startCameraMoveInterval();
   }
 
   setupDragControls() {

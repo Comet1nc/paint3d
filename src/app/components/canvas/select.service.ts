@@ -49,32 +49,7 @@ export class SelectService {
     } else {
       scaleX = this.selectedObject.scale.x;
     }
-
-    // this.currentSelectTool.scale.set(
-    //   scaleX,
-    //   this.selectedObject.scale.y,
-    //   scaleX
-    // );
   }
-
-  // startCameraMoveInterval() {
-  //   // this.lastCameraPos = this.canvasService.camera.position;
-  //   // this.currentSelectTool?.lookAt(this.canvasService.camera.position);
-  //   let interval = setInterval(() => {
-  //     if (!this.selectModeIsActive) return;
-  //     // console.log(this.canvasService.camera.position);
-  //     if (this.canvasService.camera.rotation.x > 90 * Math.PI) {
-  //       this.currentSelectTool.lookAt(
-  //         new THREE.Vector3(this.canvasService.camera.position.x)
-  //       );
-  //     }
-  //     // this.lastCameraPos = this.canvasService.camera.position;
-  //     // if (this.canvasService.camera.position !== this.lastCameraPos) {
-  //     //   // console.log('ww');
-
-  //     // }
-  //   }, 100);
-  // }
 
   createSelectTool() {
     let boundingBox = new THREE.Box3().setFromObject(this.selectedObject);

@@ -116,7 +116,7 @@
   <div class="color-edit-wrapper">
     <h1>Edit Color</h1>
     <div class="input-wrapper">
-      <input type="color" #colorInput />
+      <input type="color" #colorInput [(ngModel)]="inputColorValue" />
       <button (click)="applyColor(colorInput)">Apply color</button>
     </div>
   </div>

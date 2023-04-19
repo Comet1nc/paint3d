@@ -19,6 +19,7 @@ export class SelectionComponent implements OnDestroy, OnInit {
   rotationX: number = 0;
   rotationY: number = 0;
   rotationZ: number = 0;
+  inputColorValue: string = '';
 
   constructor(private selectService: SelectService, private router: Router) {}
 
@@ -27,22 +28,35 @@ export class SelectionComponent implements OnDestroy, OnInit {
       this.router.navigate(['']);
     }
 
-    this.selectService.onItemSelected.subscribe(
-      (item: THREE.Object3D | undefined) => {
-        if (item === undefined) return;
-        this.scaleX = item.scale.x;
-        this.scaleY = item.scale.y;
-        this.scaleZ = item.scale.z;
+    this.selectService.onItemSelected.subscribe((item: any | undefined) => {
+      if (item === undefined) return;
+      this.scaleX = item.scale.x;
+      this.scaleY = item.scale.y;
+      this.scaleZ = item.scale.z;
 
-        this.positionX = item.position.x;
-        this.positionY = item.position.y;
-        this.positionZ = item.position.z;
+      this.positionX = item.position.x;
+      this.positionY = item.position.y;
+      this.positionZ = item.position.z;
 
-        this.rotationX = Math.round(THREE.MathUtils.radToDeg(item.rotation.x));
-        this.rotationY = Math.round(THREE.MathUtils.radToDeg(item.rotation.y));
-        this.rotationZ = Math.round(THREE.MathUtils.radToDeg(item.rotation.z));
-      }
-    );
+      this.rotationX = Math.round(THREE.MathUtils.radToDeg(item.rotation.x));
+      this.rotationY = Math.round(THREE.MathUtils.radToDeg(item.rotation.y));
+      this.rotationZ = Math.round(THREE.MathUtils.radToDeg(item.rotation.z));
+
+      let r = item.material.color.r * 255;
+      let g = item.material.color.g * 255;
+      let b = item.material.color.b * 255;
+
+      this.inputColorValue = this.rgbToHex(r, g, b);
+    });
+  }
+
+  rgbToHex(r: any, g: any, b: any) {
+    return '#' + ((1 << 24) | (r << 16) | (g << 8) | b).toString(16).slice(1);
+  }
+
+  componentToHex(c: any) {
+    let hex = c.toString(16);
+    return hex.length == 1 ? '0' + hex : hex;
   }
 
   applyScale() {
