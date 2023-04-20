@@ -27,9 +27,6 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     0.1,
     10000
   );
-  orbitControls!: OrbitControls;
-
-  renderer!: THREE.WebGLRenderer;
 
   geometry = new THREE.BoxGeometry(1, 1, 1);
   material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -38,9 +35,6 @@ export class CanvasComponent implements OnInit, AfterViewInit {
   raycaster = new THREE.Raycaster();
   pointer = new THREE.Vector2();
 
-  dragControls!: DragControls;
-
-  objectsOnScene: THREE.Object3D[] = [];
   // dragStartEvent: Event;
   constructor(
     private selectService: SelectService,
@@ -53,11 +47,14 @@ export class CanvasComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     // Renderer Setup
-    this.renderer = new THREE.WebGLRenderer({
+    this.canvasService.renderer = new THREE.WebGLRenderer({
       canvas: this.canvasRef.nativeElement,
       antialias: true,
     });
-    this.renderer.setSize(window.innerWidth - 300, window.innerHeight - 120);
+    this.canvasService.renderer.setSize(
+      window.innerWidth - 300,
+      window.innerHeight - 120
+    );
 
     this.setupLighting();
 
@@ -72,7 +69,10 @@ export class CanvasComponent implements OnInit, AfterViewInit {
         (window.innerWidth - 300) / (window.innerHeight - 120);
       this.camera.updateProjectionMatrix();
 
-      this.renderer.setSize(window.innerWidth - 300, window.innerHeight - 120);
+      this.canvasService.renderer.setSize(
+        window.innerWidth - 300,
+        window.innerHeight - 120
+      );
     });
 
     this.canvasRef.nativeElement.addEventListener(
@@ -129,56 +129,34 @@ export class CanvasComponent implements OnInit, AfterViewInit {
       ) {
         console.log('clicked on selected item');
 
-        console.log(this.dragControls.getObjects());
+        console.log(this.canvasService.dragControls.getObjects());
         // move object
       }
       if (this.selectService.selectModeIsActive) {
         this.selectService.onItemSelected.next(intersects[0].object);
-        if (this.dragControls !== undefined) {
-          this.dragControls.removeEventListener;
+        if (this.canvasService.dragControls !== undefined) {
+          this.canvasService.dragControls.removeEventListener;
         }
       }
 
       console.log('OK');
     });
 
-    this.setupDragControls();
-  }
-
-  setupDragControls() {
-    this.dragControls = new DragControls(
-      this.objectsOnScene,
-      this.camera,
-      this.renderer.domElement
-    );
-
-    this.canvasService.dragControls = this.dragControls;
-
-    this.dragControls.addEventListener('dragstart', (event: any) => {
-      this.orbitControls.enabled = false;
-      event.object.material.emissive.set(0xaaaaaa);
-    });
-
-    this.dragControls.addEventListener('dragend', (event: any) => {
-      this.orbitControls.enabled = true;
-      event.object.material.emissive.set(0x000000);
-    });
-
-    this.dragControls.enabled = false;
+    this.canvasService.setupDragControls();
   }
 
   setupCamera() {
-    this.orbitControls = new OrbitControls(
+    this.canvasService.orbitControls = new OrbitControls(
       this.camera,
       this.canvasRef.nativeElement
     );
-    this.orbitControls.zoomSpeed = 2.5;
+    this.canvasService.orbitControls.zoomSpeed = 2.5;
     this.camera.position.z = 7;
 
     this.canvasService.camera = this.camera;
 
     // controls.update() must be called after any manual changes to the camera's transform
-    this.orbitControls.update();
+    this.canvasService.orbitControls.update();
   }
 
   createCube() {
@@ -232,8 +210,8 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     circleMesh.name = 'blocked';
     this.cube.setRotationFromEuler(new THREE.Euler(0, 0, 0));
 
-    this.objectsOnScene.push(testCube1);
-    this.objectsOnScene.push(this.cube);
+    this.canvasService.objectsOnScene.push(testCube1);
+    this.canvasService.objectsOnScene.push(this.cube);
 
     this.scene.add(circleMesh);
     this.scene.add(this.cube);
@@ -244,7 +222,7 @@ export class CanvasComponent implements OnInit, AfterViewInit {
     requestAnimationFrame(() => this.animate());
     this.selectService.animateSelectTool();
     // this.cube.rotation.y += 0.02;
-    this.renderer.render(this.scene, this.camera);
+    this.canvasService.renderer.render(this.scene, this.camera);
   }
 
   createMaterial() {
