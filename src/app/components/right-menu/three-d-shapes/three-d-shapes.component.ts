@@ -10,6 +10,7 @@ import { DragControls } from 'three/examples/jsm/controls/DragControls';
 })
 export class ThreeDShapesComponent {
   title = '3D shapes';
+  inputColorValue: string = '#00000';
 
   constructor(private canvasService: CanvasService) {}
   createCube() {
@@ -18,10 +19,7 @@ export class ThreeDShapesComponent {
       flatShading: false,
     });
 
-    const hue = Math.random();
-    const saturation = 1;
-    const luminance = 0.5;
-    material.color.setHSL(hue, saturation, luminance);
+    material.color.set(this.inputColorValue as THREE.HexColorString);
 
     let geometry = new THREE.BoxGeometry(1, 1, 1);
 
@@ -34,5 +32,18 @@ export class ThreeDShapesComponent {
     this.canvasService.objectsOnScene.push(cube);
     this.canvasService.setupDragControls();
     this.canvasService.scene.add(cube);
+  }
+  // applyColor(el: any) {
+  //   this.selectService.setNewColor(el.value);
+  // }
+  hexToRgb(hex: any) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        }
+      : null;
   }
 }

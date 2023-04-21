@@ -1,12 +1,24 @@
 <div class="container">
-  <h1 class="title">{{ title }}</h1>
-  <div class="shapes-category">
-    <div class="name">3D Objects</div>
-    <ul>
-      <li (click)="createCube()">Cube</li>
-      <li>Sphere</li>
-      <li>Cone</li>
-      <li>Pyramid</li>
-    </ul>
-  </div>
+  <header>
+    <h1 class="title">{{ title }}</h1>
+  </header>
+  <main>
+    <div class="shapes-category">
+      <div class="name">3D Objects</div>
+      <ul>
+        <li (click)="createCube()">Cube</li>
+        <li>Sphere</li>
+        <li>Cone</li>
+        <li>Pyramid</li>
+      </ul>
+    </div>
+  </main>
+  <footer>
+    <div class="color-edit-wrapper">
+      <h1>Edit Color</h1>
+      <div class="input-wrapper">
+        <input type="color" [(ngModel)]="inputColorValue" />
+      </div>
+    </div>
+  </footer>
 </div>
