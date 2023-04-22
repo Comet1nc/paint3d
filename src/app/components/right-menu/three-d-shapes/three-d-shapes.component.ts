@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { CanvasService } from '../../canvas/canvas.service';
 import * as THREE from 'three';
-import { DragControls } from 'three/examples/jsm/controls/DragControls';
 
 @Component({
   selector: 'app-three-d-shapes',
@@ -13,7 +12,26 @@ export class ThreeDShapesComponent {
   inputColorValue: string = '#00000';
 
   constructor(private canvasService: CanvasService) {}
+
   createCube() {
+    let geometry = new THREE.BoxGeometry(1, 1, 1);
+
+    let cube = new THREE.Mesh(geometry, this.getNewMaterial());
+    cube.name = 'normal';
+
+    this.canvasService.addNewObjectToScene(cube);
+  }
+
+  createSphere() {
+    let geometry = new THREE.SphereGeometry(1, 30, 30);
+
+    let sphere = new THREE.Mesh(geometry, this.getNewMaterial());
+    sphere.name = 'normal';
+
+    this.canvasService.addNewObjectToScene(sphere);
+  }
+
+  getNewMaterial() {
     const material = new THREE.MeshPhongMaterial({
       side: THREE.DoubleSide,
       flatShading: false,
@@ -21,29 +39,6 @@ export class ThreeDShapesComponent {
 
     material.color.set(this.inputColorValue as THREE.HexColorString);
 
-    let geometry = new THREE.BoxGeometry(1, 1, 1);
-
-    let cube = new THREE.Mesh(
-      geometry,
-      material
-      //new THREE.MeshPhongMaterial({ color: 'red' })
-    );
-    cube.name = 'normal';
-    this.canvasService.objectsOnScene.push(cube);
-    this.canvasService.setupDragControls();
-    this.canvasService.scene.add(cube);
-  }
-  // applyColor(el: any) {
-  //   this.selectService.setNewColor(el.value);
-  // }
-  hexToRgb(hex: any) {
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result
-      ? {
-          r: parseInt(result[1], 16),
-          g: parseInt(result[2], 16),
-          b: parseInt(result[3], 16),
-        }
-      : null;
+    return material;
   }
 }

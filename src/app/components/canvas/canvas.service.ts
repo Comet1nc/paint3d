@@ -33,4 +33,10 @@ export class CanvasService {
 
     this.dragControls.enabled = false;
   }
+
+  addNewObjectToScene(obj: THREE.Object3D) {
+    this.objectsOnScene.push(obj);
+    this.setupDragControls();
+    this.scene.add(obj);
+  }
 }
