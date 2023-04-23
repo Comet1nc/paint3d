@@ -30,6 +30,14 @@ export class ThreeDShapesComponent {
 
     this.canvasService.addNewObjectToScene(sphere);
   }
+  createCone() {
+    let geometry = new THREE.ConeGeometry(0.5, 2, 32);
+
+    let cone = new THREE.Mesh(geometry, this.getNewMaterial());
+    cone.name = 'normal';
+
+    this.canvasService.addNewObjectToScene(cone);
+  }
 
   getNewMaterial() {
     const material = new THREE.MeshPhongMaterial({
