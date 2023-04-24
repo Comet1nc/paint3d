@@ -39,6 +39,15 @@ export class ThreeDShapesComponent {
     this.canvasService.addNewObjectToScene(cone);
   }
 
+  createPyramid() {
+    let geometry = new THREE.ConeGeometry(0.5, 2, 4);
+
+    let pyramid = new THREE.Mesh(geometry, this.getNewMaterial());
+    pyramid.name = 'normal';
+
+    this.canvasService.addNewObjectToScene(pyramid);
+  }
+
   getNewMaterial() {
     const material = new THREE.MeshPhongMaterial({
       side: THREE.DoubleSide,
