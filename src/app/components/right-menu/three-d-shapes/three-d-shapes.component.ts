@@ -48,6 +48,15 @@ export class ThreeDShapesComponent {
     this.canvasService.addNewObjectToScene(pyramid);
   }
 
+  createCylinder() {
+    let geometry = new THREE.CylinderGeometry(0.5, 0.5, 1, 32);
+
+    let cylinder = new THREE.Mesh(geometry, this.getNewMaterial());
+    cylinder.name = 'normal';
+
+    this.canvasService.addNewObjectToScene(cylinder);
+  }
+
   getNewMaterial() {
     const material = new THREE.MeshPhongMaterial({
       side: THREE.DoubleSide,
