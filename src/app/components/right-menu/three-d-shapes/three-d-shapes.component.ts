@@ -57,6 +57,15 @@ export class ThreeDShapesComponent {
     this.canvasService.addNewObjectToScene(cylinder);
   }
 
+  createDoughnut() {
+    let geometry = new THREE.TorusGeometry(1, 0.5, 30, 64);
+
+    let doughnut = new THREE.Mesh(geometry, this.getNewMaterial());
+    doughnut.name = 'normal';
+
+    this.canvasService.addNewObjectToScene(doughnut);
+  }
+
   getNewMaterial() {
     const material = new THREE.MeshPhongMaterial({
       side: THREE.DoubleSide,
