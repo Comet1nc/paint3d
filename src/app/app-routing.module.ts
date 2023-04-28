@@ -21,6 +21,13 @@ const routes: Routes = [
         (m) => m.SelectionModule
       ),
   },
+  {
+    path: 'two-d-shapes',
+    loadChildren: () =>
+      import('./components/right-menu/two-d-shapes/two-d-shapes.module').then(
+        (m) => m.TwoDShapesModule
+      ),
+  },
 ];
 
 @NgModule({
