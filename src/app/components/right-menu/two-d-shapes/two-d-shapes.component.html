@@ -1,1 +1,25 @@
-<p>two-d-shapes works!</p>
+<div class="container">
+  <header>
+    <h1 class="title">{{ title }}</h1>
+  </header>
+  <main>
+    <div class="shapes-category">
+      <div class="name">2D Objects</div>
+      <ul>
+        <li (click)="createPlane()">Plane</li>
+        <li (click)="createCircle()">Circle</li>
+        <li (click)="createTriangle()">Triangle</li>
+        <li (click)="createCylinder()">Cylinder</li>
+        <li (click)="createDoughnut()">Doughnut</li>
+      </ul>
+    </div>
+  </main>
+  <footer>
+    <div class="color-edit-wrapper">
+      <h1>Edit Color</h1>
+      <div class="input-wrapper">
+        <input type="color" [(ngModel)]="inputColorValue" />
+      </div>
+    </div>
+  </footer>
+</div>
